@@ -3,7 +3,6 @@ mandrill_client = mandrill.Mandrill('kSeK7plXVJ0b2JuCfSLJ5A')
 message = {
     'from_email': 'philipp.xue@gmail.com',
     'from_name': 'Xue Jiaqi',
-    'headers': {'Reply-To': 'philipp.xue@gmail.com'},
     'html': '<p>Example HTML content</p>',
     'important': False,
     'subject': 'example subject',
