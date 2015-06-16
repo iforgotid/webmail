@@ -21,11 +21,3 @@ class SendMailPage(BaseHandler):
 app = webapp2.WSGIApplication([
     ('/', SendMailPage),
 ], debug=True)
-
-def main():
-    from wsgiref.simple_server import make_server
-    httpd = make_server('', 10086, app)
-    httpd.serve_forever()
-
-if __name__ == '__main__':
-    main()
