@@ -3,3 +3,4 @@ webapp2
 mandrill
 webob
 jinja2==2.7.2
+leancloud-sdk
