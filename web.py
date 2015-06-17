@@ -3,8 +3,9 @@ import webapp2
 from webapp2_extras import jinja2
 import leancloud
 import os, sys
-sys.path.append(os.getcwd()+'\\model')
-form Mail import Mail
+
+sys.path.append(os.path.join(os.path.abspath('.'),'model'))
+from Mail import Mail
 leancloud.init('73b6c6p6lgs8s07m6yaq5jeu7e19j3i3x7fdt234ufxw9ity', 'h5lu7ils6mutvirgrxeodo6xfuqcgxh4ny0bdar3utl076cu')
 
 class BaseHandler(webapp2.RequestHandler):
@@ -21,9 +22,10 @@ class BaseHandler(webapp2.RequestHandler):
 class SendMailPage(BaseHandler):
     def get(self):
         newMail = Mail()
-        newMail.set('subject','Test mail 2 subject')
-        newMail.set('to',['253902456@qq.com'])
-        newMail.set('html','<p>This is a test mail.</p>')
+        newMail.set('subject','Test mail 3 subject')
+        newMail.set('to',['philipp.xue@qq.com'])
+        newMail.set('html','This is a test mail')
+        newMail.save()
         context = {'message': 'Hello, world!'}
         self.render_response('main.html', **context)
 

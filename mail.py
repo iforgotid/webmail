@@ -12,3 +12,5 @@ message = {
             'type': 'to'}],
 }
 result = mandrill_client.messages.send(message=message, async=False)
+import sys,os
+print os.path.join(os.path.abspath('.'),'model')
