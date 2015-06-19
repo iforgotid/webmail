@@ -40,8 +40,52 @@
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">正文</label>
+
                     <div class="col-sm-10">
                         <textarea id="textarea" placeholder="Enter text ..."></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">发送方式</label>
+
+                    <div class="radio col-sm-10" id="sendType">
+                        <label>
+                            <input type="radio" name="sentTypeRadios" id="sendImmediatelyRadio" value="immediately" checked>
+                            立即发送
+                        </label>
+                        <label>
+                            <input type="radio" name="sentTypeRadios" id="sendByIntervalRadio" value="byInterval">
+                            指定时间后发送(如一小时后)
+                        </label>
+                        <label>
+                            <input type="radio" name="sentTypeRadios" id="sendByTimeRadio" value="byTime">
+                            指定时间点发送(如2015/6/23 19:00)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" id="intervalContainer" style="display: none;">
+                    <label class="col-sm-2 control-label">延时</label>
+
+                    <div class="col-sm-2">
+                        <input type="text" id="intervalCount" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="timeUnit">
+                            <option value="minute">分钟</option>
+                            <option value="hour">小时</option>
+                            <option value="day">天</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="timeContainer" style="display: none;">
+                    <label class="col-sm-2 control-label">指定时间</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="timeStr" class="form-control" placeholder="例如2015-6-23 18:00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <i class="glyphicon glyphicon-info-sign"></i>时区:北京时间GMT+0800
                     </div>
                 </div>
                 <div class="form-group">

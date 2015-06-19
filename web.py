@@ -6,8 +6,14 @@ import os, sys
 sys.path.append(os.path.join(os.path.abspath('.'),'model'))
 sys.path.append(os.path.join(os.path.abspath('.'),'service'))
 from Mail import Mail
+from Timer import Timer
+
 from mailer import mailer
 leancloud.init('73b6c6p6lgs8s07m6yaq5jeu7e19j3i3x7fdt234ufxw9ity', 'h5lu7ils6mutvirgrxeodo6xfuqcgxh4ny0bdar3utl076cu')
+
+import time,datetime
+os.environ['TZ'] = 'Asia/Shanghai'
+time.tzset()
 
 class BaseHandler(webapp2.RequestHandler):
     @webapp2.cached_property
@@ -22,11 +28,6 @@ class BaseHandler(webapp2.RequestHandler):
 
 class SendMailPage(BaseHandler):
     def get(self):
-        newMail = Mail()
-        newMail.set('subject','Test mail 3 subject')
-        newMail.set('to',['philipp.xue@qq.com'])
-        newMail.set('html','This is a test mail')
-        newMail.save()
         context = {'message': 'Hello, world!'}
         self.render_response('main.html', **context)
 
@@ -38,7 +39,42 @@ class SendMailApi(BaseHandler):
         sender.send(data)
         self.response.out.write(json.dumps(data))
 
+class CreateMailTimer(BaseHandler):
+    def post(self):
+        self.response.headers['Content-Type'] = 'application/json'
+        data = json.loads(self.request.body)
+        newMail = Mail()
+        newMail.set('subject',data['subject'])
+        newMail.set('to',data['to'])
+        newMail.set('html',data['html'])
+        newMail.save()
+        type = data['type']
+        timer = Timer()
+        timer.set('mailId',newMail.id)
+        timer.set('status','unsent')
+        if type == 'byInterval':
+            now = datetime.datetime.now()
+            timeUnit = data['timeUnit']
+            intervalCount = data['intervalCount']
+            seconds = 0;
+            if timeUnit == 'day':
+                seconds = intervalCount * 86400
+            elif timeUnit == 'hour':
+                seconds = intervalCount * 3600
+            elif timeUnit == 'minute':
+                seconds = intervalCount * 60
+            timeAfter = now + datetime.timedelta(seconds = seconds)
+            timestamp = int(time.mktime(timeAfter.timetuple()))
+        elif type == 'byTime':
+            timeStr = data['timeStr']
+            timeArray = time.strptime(timeStr, "%Y-%m-%d %H:%M")
+            timestamp = int(time.mktime(timeArray))
+        timer.set('timestamp',timestamp)
+        timer.save()
+        self.response.out.write(json.dumps(data))
+
 app = webapp2.WSGIApplication([
     ('/', SendMailPage),
-    ('/api/sendMail',SendMailApi)
+    ('/api/sendMail',SendMailApi),
+    ('/api/createTimerForMail',CreateMailTimer),
 ], debug=True)
