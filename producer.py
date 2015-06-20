@@ -13,9 +13,9 @@ class Mail(Object):
         return self.set('subject', value)
 while True:
     newMail = Mail()
-    newMail.set('subject','test mail123')
+    newMail.set('subject','producer mail')
     newMail.set('to',[{'email':'philipp.xue@gmail.com','type':'to'}])
-    newMail.set('html','this is contnet')
+    newMail.set('html','this is a mail from producer.')
     newMail.save()
     print newMail.id
-    time.sleep(10)
+    time.sleep(3600)
