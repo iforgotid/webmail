@@ -1,25 +1,36 @@
 __author__ = 'philipp'
 import time
+import datetime
 import leancloud
-from leancloud import Object
-leancloud.init('73b6c6p6lgs8s07m6yaq5jeu7e19j3i3x7fdt234ufxw9ity', 'h5lu7ils6mutvirgrxeodo6xfuqcgxh4ny0bdar3utl076cu')
-class Mail(Object):
-    @property
-    def subject(self):
-        return self.get('subject')
 
-    @subject.setter
-    def subject(self, value):
-        return self.set('subject', value)
+from leancloud import Query,Object
+leancloud.init('73b6c6p6lgs8s07m6yaq5jeu7e19j3i3x7fdt234ufxw9ity', 'h5lu7ils6mutvirgrxeodo6xfuqcgxh4ny0bdar3utl076cu')
+
+import sys,os
+sys.path.append(os.path.join(os.path.abspath('.'),'service'))
+from sqs import SQS
+
+
 while True:
     try:
-        newMail = Mail()
-        newMail.set('subject','producer mail')
-        newMail.set('to',[{'email':'philipp.xue@gmail.com','type':'to'}])
-        newMail.set('html','this is a mail from producer.')
-        newMail.save()
-        print newMail.id
-        a = 1/0
+        now = datetime.datetime.now()
+        oneMinuteAfter = now + datetime.timedelta(seconds = 60)
+        timestamp = int(time.mktime(oneMinuteAfter.timetuple()))
+        print timestamp
+        Timer = Object.extend('Timer')
+        query = Query(Timer)
+        query.equal_to('status', 'unsent')
+        query.less_than('timestamp',timestamp)
+        timers = query.find()
+        for timer in timers:
+            print timer.get('mailId')
+            print timer.get('status')
+            mailId = timer.get('mailId')
+            queue = SQS()
+            queue.write(mailId)
+            timer.set('status','queued')
+            timer.save()
+
     except StandardError, e:
         print 'Error:',e
     finally:
