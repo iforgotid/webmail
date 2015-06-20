@@ -18,4 +18,4 @@ while True:
     newMail.set('html','this is a mail from producer.')
     newMail.save()
     print newMail.id
-    time.sleep(3600)
+    time.sleep(300)
