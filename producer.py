@@ -12,10 +12,15 @@ class Mail(Object):
     def subject(self, value):
         return self.set('subject', value)
 while True:
-    newMail = Mail()
-    newMail.set('subject','producer mail')
-    newMail.set('to',[{'email':'philipp.xue@gmail.com','type':'to'}])
-    newMail.set('html','this is a mail from producer.')
-    newMail.save()
-    print newMail.id
-    time.sleep(300)
+    try:
+        newMail = Mail()
+        newMail.set('subject','producer mail')
+        newMail.set('to',[{'email':'philipp.xue@gmail.com','type':'to'}])
+        newMail.set('html','this is a mail from producer.')
+        newMail.save()
+        print newMail.id
+        a = 1/0
+    except StandardError, e:
+        print 'Error:',e
+    finally:
+        time.sleep(60)

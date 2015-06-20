@@ -1,17 +1,13 @@
 __author__ = 'philipp'
-import boto
+import boto,base64
 from boto import sqs
 from boto.sqs.message import Message
-conn = sqs.connect_to_region('us-west-2',aws_access_key_id='AKIAI26Z4PMM2TY53CTQ',aws_secret_access_key='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')
-webmail_queue = conn.get_queue('webmail')
-print webmail_queue
+access_key_id = base64.decodestring('QUtJQUlOQUdCVkRONks1RU5FNVE=')
+access_key_value = base64.decodestring('T2t6elFSdGFpMjk2OUh0aEhBTStNYjFZZHdGK09KeXhESUlIcWV4cQ==')
+conn = sqs.connect_to_region('us-west-2',aws_access_key_id=access_key_id,aws_secret_access_key=access_key_value)
+demo_queue = conn.get_queue('demoqueue')
+print demo_queue
 
-for i in range(1, 11):
-    m = Message()
-    m.set_body('This is message %d' % i)
-    webmail_queue.write(m)
-
-
-rs = webmail_queue.get_messages(10)
-print len(rs)
-print rs[0].get_body()
+rs = demo_queue.get_messages(10)
+for record in rs:
+    print record.get_body()

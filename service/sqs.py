@@ -13,5 +13,7 @@ class SQS:
         m.set_body(message)
         webmail_queue.write(m)
     def read(self):
-        rs = webmail_queue.get_messages()
+        rs = webmail_queue.get_messages(10)
         return rs
+    def remove(self,message):
+        webmail_queue.delete_message(message)

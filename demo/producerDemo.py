@@ -10,7 +10,7 @@ import sys,os
 sys.path.append(os.path.join(os.path.abspath('..'),'service'))
 from sqs import SQS
 now = datetime.datetime.now()
-oneMinuteAfter = now + datetime.timedelta(seconds = 60)
+oneMinuteAfter = now + datetime.timedelta(seconds = 300)
 timestamp = int(time.mktime(oneMinuteAfter.timetuple()))
 print timestamp
 
@@ -25,3 +25,5 @@ for timer in timers:
     mailId = timer.get('mailId')
     queue = SQS()
     queue.write(mailId)
+    timer.set('status','queued')
+    timer.save()
