@@ -11,9 +11,23 @@ from Timer import Timer
 from mailer import mailer
 leancloud.init('73b6c6p6lgs8s07m6yaq5jeu7e19j3i3x7fdt234ufxw9ity', 'h5lu7ils6mutvirgrxeodo6xfuqcgxh4ny0bdar3utl076cu')
 
-import time,datetime
+import time,datetime,mimetypes
 os.environ['TZ'] = 'Asia/Shanghai'
 time.tzset()
+
+class StaticFileHandler(webapp2.RequestHandler):
+    def get(self, path):
+        abs_path = os.path.abspath(os.path.join('static', path))
+        if os.path.isdir(abs_path) or abs_path.find(os.getcwd()) != 0:
+            self.response.set_status(403)
+            return
+        try:
+            f = open(abs_path, 'r')
+            self.response.headers['Content-Type'] = mimetypes.guess_type(abs_path)[0]
+            self.response.out.write(f.read())
+            f.close()
+        except:
+            self.response.set_status(404)
 
 class BaseHandler(webapp2.RequestHandler):
     @webapp2.cached_property
@@ -77,4 +91,5 @@ app = webapp2.WSGIApplication([
     ('/', SendMailPage),
     ('/api/sendMail',SendMailApi),
     ('/api/createTimerForMail',CreateMailTimer),
+    (r'/static/(.+)', StaticFileHandler)
 ], debug=True)
