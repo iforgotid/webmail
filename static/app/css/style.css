@@ -1,0 +1,12 @@
+.button-email {
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.modal-error-message {
+    color:red;
+}
+
+.modal-info-message {
+    color:green;
+}

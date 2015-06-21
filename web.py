@@ -42,7 +42,7 @@ class BaseHandler(webapp2.RequestHandler):
 
 class SendMailPage(BaseHandler):
     def get(self):
-        context = {'message': 'Hello, world!'}
+        context = {}
         self.render_response('main.html', **context)
 
 class SendMailApi(BaseHandler):
@@ -51,7 +51,7 @@ class SendMailApi(BaseHandler):
         data = json.loads(self.request.body)
         sender = mailer()
         sender.send(data)
-        self.response.out.write(json.dumps(data))
+        self.response.out.write(json.dumps({'code':0}))
 
 class CreateMailTimer(BaseHandler):
     def post(self):
@@ -85,7 +85,7 @@ class CreateMailTimer(BaseHandler):
             timestamp = int(time.mktime(timeArray))
         timer.set('timestamp',timestamp)
         timer.save()
-        self.response.out.write(json.dumps(data))
+        self.response.out.write(json.dumps({'code':0}))
 
 app = webapp2.WSGIApplication([
     ('/', SendMailPage),
