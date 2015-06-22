@@ -5,6 +5,7 @@
  - static目录 提供css,js等静态资源
  - Procfile heroku的启动配置文件
  - requirements.txt pip安装依赖
+ - docs目录 包含文档，自测报告
  
  		#Procfile配置:
  		web: gunicorn web:app
