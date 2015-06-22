@@ -38,12 +38,15 @@ function init() {
             $('#mailListContainer').hide();
         }
     });
+    //初始化后隐藏遮罩
+    mask('hide');
 }
 function sendMailImmediately() {
     var postData = getMailObj();
     if(!postData) {
         return;
     }
+    mask();
     $.ajax({
         type: "POST",
         timeout: 10 * 1000,
@@ -60,8 +63,11 @@ function sendMailImmediately() {
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, errorThrown);
             showMessage('error', '网络繁忙，请稍后再试');
+        },
+        complete: function() {
+            mask('hide');
         }
-    })
+    });
 }
 function createTimerForMail(type) {
     var postData = getMailObj();
@@ -71,13 +77,22 @@ function createTimerForMail(type) {
     postData.type = type;
     if (type == 'byInterval') {
         var timeUnit = $("#timeUnit option:selected").val();
-        var intervalCount = Number($('#intervalCount').val());
-        postData.intervalCount = intervalCount;
+        var intervalCount = $('#intervalCount').val();
+        if(intervalCount == '' || isNaN(intervalCount)) {
+            showMessage('error', '请输入正确的延时时间，必须为数字');
+            return;
+        }
+        postData.intervalCount = Number(intervalCount);
         postData.timeUnit = timeUnit;
     } else if (type == 'byTime') {
         var timeStr = $('#timeStr').val();
+        if(/^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}$/.test(timeStr) == false) {
+            showMessage('error', '请输入正确格式，如:2015-06-23 19:00');
+            return;
+        }
         postData.timeStr = timeStr;
     }
+    mask();
     $.ajax({
         type: "POST",
         timeout: 10 * 1000,
@@ -93,6 +108,9 @@ function createTimerForMail(type) {
         },
         error: function(){
             showMessage('error', '网络繁忙，请稍后再试');
+        },
+        complete: function() {
+            mask('hide');
         }
     });
 }
@@ -173,4 +191,15 @@ function showMessage(status, message) {
     $('#infoMessage').html(message);
     $('#infoModal').modal();
 }
+
+function mask(action) {
+    if(action == 'hide') {
+        $('#loading-mask').hide();
+    } else if(action == 'show') {
+        $('#loading-mask').show();
+    } else {
+        $('#loading-mask').show();
+    }
+}
+
 init();

@@ -7,9 +7,9 @@ while True:
     try:
         timer = mail_timer()
         timer.produce()
-        time.sleep(60)
+        time.sleep(3)
         timer.consume()
     except StandardError, e:
         print 'Error:',e
     finally:
-        time.sleep(240)
+        time.sleep(60)
