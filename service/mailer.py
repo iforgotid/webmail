@@ -8,3 +8,4 @@ class mailer:
         message['from_name'] = 'Xue Jiaqi'
         result = mandrill_client.messages.send(message=message, async=False)
         print result
+        return result
