@@ -172,7 +172,7 @@ function addMailTo() {
         showMessage('error', '输入的EMAIL格式不合法，请重新输入');
         return;
     }
-    var html = '<button type="button" class="btn btn-info button-email"><span class="email-text">' + emailAddress + '</span>&nbsp<i class="glyphicon glyphicon-remove remove-mailto"></i></button>';
+    var html = '<button type="button" class="btn btn-info button-email" tabindex="-1"><span class="email-text">' + emailAddress + '</span>&nbsp<i class="glyphicon glyphicon-remove remove-mailto"></i></button>';
     $('#toMailList').append(html);
     $('#mailto').val('');
     $('#mailListContainer').show();
