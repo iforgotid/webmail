@@ -1,19 +1,12 @@
 __author__ = 'philipp'
-import webapp2
+import webapp2,leancloud,json,os,time,datetime,mimetypes
 from webapp2_extras import jinja2
-import leancloud,json
-import os, sys
-sys.path.append(os.path.join(os.path.abspath('.'),'model'))
-sys.path.append(os.path.join(os.path.abspath('.'),'service'))
-from Mail import Mail
-from Timer import Timer
+from leancloud import Object
+from service.mailer import mailer
 
-from mailer import mailer
-leancloud.init('73b6c6p6lgs8s07m6yaq5jeu7e19j3i3x7fdt234ufxw9ity', 'h5lu7ils6mutvirgrxeodo6xfuqcgxh4ny0bdar3utl076cu')
-
-import time,datetime,mimetypes
 os.environ['TZ'] = 'Asia/Shanghai'
 time.tzset()
+leancloud.init('73b6c6p6lgs8s07m6yaq5jeu7e19j3i3x7fdt234ufxw9ity', 'h5lu7ils6mutvirgrxeodo6xfuqcgxh4ny0bdar3utl076cu')
 
 class StaticFileHandler(webapp2.RequestHandler):
     def get(self, path):
@@ -57,12 +50,14 @@ class CreateMailTimer(BaseHandler):
     def post(self):
         self.response.headers['Content-Type'] = 'application/json'
         data = json.loads(self.request.body)
+        Mail = Object.extend('Mail')
         newMail = Mail()
         newMail.set('subject',data['subject'])
         newMail.set('to',data['to'])
         newMail.set('html',data['html'])
         newMail.save()
         type = data['type']
+        Timer = Object.extend('Timer')
         timer = Timer()
         timer.set('mailId',newMail.id)
         timer.set('status','unsent')

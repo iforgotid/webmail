@@ -1,3 +1,2 @@
 web: gunicorn web:app
-producer: python producer.py
-consumer: python consumer.py
+worker: python worker.py
